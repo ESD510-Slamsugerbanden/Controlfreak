@@ -38,7 +38,17 @@ QueueHandle_t azi_pos = NULL;
 QueueHandle_t ele_pos = NULL;
 
 
+void set_azi_deg(float pos){
 
+    int temp = pos/360.0*AZI_counts_pr_rev;
+    xQueueSend(azi_pos, &temp, 0);
+}
+
+void set_ele_deg(float pos){
+    int temp = pos/360.0*ELE_counts_pr_rev;
+
+    xQueueSend(ele_pos, &temp, 0);
+}
 
 
 void set_azi(int32_t pos){
@@ -55,6 +65,16 @@ int32_t get_ele(){
 int32_t get_azi(){
     return AZI_counts;
 }
+
+float get_ele_deg(){
+    return (float)ELE_counts * 360.0/(float)ELE_counts_pr_rev;
+}
+
+float get_azi_deg(){
+    return (float)AZI_counts * 360.0/(float)AZI_counts_pr_rev;
+}
+
+
 
 
 void task_motor_ctrl(void *paramters){
@@ -78,7 +98,7 @@ void task_motor_ctrl(void *paramters){
     TickType_t lastWake = xTaskGetTickCount();
 
     PID_ctrl AZI_ctrl(-200, 200, T_s, 0.6, 1, 0.1);
-    PID_ctrl ELE_ctrl(-255, 255, T_s, 2, 1, 0.1);
+    PID_ctrl ELE_ctrl(-255, 255, T_s, 10, 3, 0.6);
 
     pinMode(ELE_CW_PIN, OUTPUT);
     digitalWrite(ELE_CW_PIN,LOW);
@@ -108,7 +128,7 @@ void task_motor_ctrl(void *paramters){
         ELE_motor.set_speed(PWM_ele);
 
         
-        Serial.printf("AZI: %d", AZI_counts_local);
+        //Serial.printf("AZI: %d", AZI_counts_local);
 
 
         //digitalWrite(status_LED1_PIN, !digitalRead(status_LED1_PIN));

@@ -14,6 +14,8 @@ TaskHandle_t Ctrl_taskhandle;
 // Declare task handle
 TaskHandle_t Socket_taskhandle;
 
+// Declare task handle
+TaskHandle_t BT_taskhandle;
 
 // put function declarations here:
 int myFunction(int, int);
@@ -24,6 +26,7 @@ void setup() {
   int result = myFunction(2, 3);
   xTaskCreatePinnedToCore(task_motor_ctrl, "ctrl", 10000, NULL, 5, &Ctrl_taskhandle, 1);
   xTaskCreatePinnedToCore(task_socket, "Socket", 10000, NULL, 2, &Socket_taskhandle, 1);
+  //xTaskCreatePinnedToCore(task_bt_serial, "BT", 10000, NULL, 3, &BT_taskhandle, 1);
 }
 
 void loop() {

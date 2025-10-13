@@ -19,7 +19,7 @@ void task_socket(void* parameters){
     Serial.print("IP: ");
     Serial.println(WiFi.softAPIP());
     Serial.printf("Listening on UDP port %d\n", localUdpPort);
-
+    
     while(true){
         
         int packetSize = udp_socket.parsePacket();
@@ -28,24 +28,26 @@ void task_socket(void* parameters){
                 udp_socket.flush();
             }
             
-            long azimuth;
-            long elevation;
+
+            
+            float azimuth;
+            float elevation;
 
 
             switch (udp_socket.read())
             {
             case 0x01:
-                udp_socket.read((uint8_t*)&azimuth, sizeof(azimuth));
-                udp_socket.read((uint8_t*)&elevation, sizeof(elevation));
-                Serial.printf("Setting orientation: azi %d ele %d\n", azimuth, elevation);
-
-                set_azi(azimuth);
-                set_ele(elevation);
+                udp_socket.read((byte*)&azimuth, sizeof(azimuth));
+                udp_socket.read((byte*)&elevation, sizeof(elevation));
+                Serial.printf("Setting orientation: azi %f ele %f\n", azimuth, elevation);
+                
+                set_azi_deg(azimuth);
+                set_ele_deg(elevation);
 
                 break;
             case 0x02:
-                azimuth = get_azi();
-                elevation = get_ele();
+                azimuth = get_azi_deg();
+                elevation = get_ele_deg();
                 udp_socket.beginPacket(udp_socket.remoteIP(), udp_socket.remotePort());
                 udp_socket.write((byte*)&azimuth, sizeof(azimuth));
                 udp_socket.write((byte*)&elevation, sizeof(elevation));
@@ -57,17 +59,15 @@ void task_socket(void* parameters){
                 break;
             }
         }
-
-        
     }
 }
 
 /*
     Okay den helt dumme protokol
-    ID     CMD     Azimuth   Elevation
+    ID     CMD     Azimuth   Elevation as float
     0       1       2-5     6-9
     0x42 | 0x01 | 4 bytes | 4 bytes |
 
-    ID      CMD    RETUR AZIMUTH    ELEVATION
+    ID      CMD    RETUR AZIMUTH    ELEVATION as float
     0x42 | 0X02 | => | 4 bytes | 4 bytes |
 */
