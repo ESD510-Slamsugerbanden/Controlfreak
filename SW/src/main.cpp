@@ -29,6 +29,7 @@ void setup() {
   //xTaskCreatePinnedToCore(task_bt_serial, "BT", 10000, NULL, 3, &BT_taskhandle, 1);
 }
 
+
 void loop() {
   // put your main code here, to run repeatedly:
   delay(1000);

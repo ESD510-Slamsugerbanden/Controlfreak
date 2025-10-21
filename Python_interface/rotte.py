@@ -55,6 +55,6 @@ if __name__ == "__main__":
 
         print(azi, ele)
         #print(client.get_pos())
-        client.set_pos(float(azi)*45, float(ele)*45)
+        client.set_pos(float(azi)*45, 90)
 
         time.sleep(0.05)
