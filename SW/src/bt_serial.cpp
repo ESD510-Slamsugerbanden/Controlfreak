@@ -1,13 +1,10 @@
 
 #include <common.h>
-#ifdef BT_ESP32
-#include <BluetoothSerial.h>
 #include<Arduino.h>
 
 
 
 
-BluetoothSerial SerialBT;
 
 
 
@@ -40,16 +37,16 @@ PP                Print Position of antenna in AZ and EL
 */
 
 void cmd_SE(char* arg, size_t len){
-    SerialBT.print("OK\n");
-    SerialBT.flush();
+    Serial.print("OK\n");
+    Serial.flush();
 }
 
 
 void cmd_AZ(char* arg, size_t len){
     if(len == 0){
         float angle = (get_azi()); // round to nearest degree
-        SerialBT.printf("AZ%.1f", angle);     
-        SerialBT.flush();
+        Serial.printf("AZ%.1f", angle);     
+        Serial.flush();
         return;
     }
     //Destroy our buffer
@@ -61,8 +58,8 @@ void cmd_AZ(char* arg, size_t len){
 void cmd_EL(char* arg, size_t len){
     if(len == 0){
         float angle = (get_ele());
-        SerialBT.printf("EL%.1f", angle);       
-        SerialBT.flush();
+        Serial.printf("EL%.1f", angle);       
+        Serial.flush();
         return;
     }
 
@@ -127,18 +124,18 @@ size_t buffer_index = 0;
 
 void task_bt_serial(void *parameter){
 
-    SerialBT.begin("TARM");
 
-    //Serial.printf("[Easycomm Serial]: Number of implented commands: %d \n", ARRAY_SIZE(cmd_table));
-    //Serial.println("[Easycomm Serial]: Ready");
+
+    Serial.printf("[Easycomm Serial]: Number of implented commands: %d \n", ARRAY_SIZE(cmd_table));
+    Serial.println("[Easycomm Serial]: Ready");
 
     while(true){
-        if(!SerialBT.available()){
-            delay(5);   
+        if(!Serial.available()){
+            delay(1);   
             continue;
         }
 
-        char key = SerialBT.read();
+        char key = Serial.read();
 
         if (buffer_index >= sizeof(buffer)){
             buffer_index = 0; // avoid overflow if serial garbage arrives  
@@ -167,11 +164,11 @@ void task_bt_serial(void *parameter){
                 cmd_table[i].func(&buffer[2], buffer_index-2);
 
                 //We've interpreted a command is it the last or are there more?
-                if(SerialBT.peek() == 0x0a){
-                    SerialBT.print('\n');
+                if(Serial.peek() == 0x0a){
+                    Serial.print('\n');
                 }
                 else{
-                    SerialBT.print(' ');
+                    Serial.print(' ');
                 }
                 buffer_index =0;
                 
@@ -182,7 +179,6 @@ void task_bt_serial(void *parameter){
 
 
         buffer_index =0;
-
+        
     }
 }
-#endif

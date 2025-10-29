@@ -25,8 +25,8 @@ void setup() {
   // put your setup code here, to run once:
   int result = myFunction(2, 3);
   xTaskCreatePinnedToCore(task_motor_ctrl, "ctrl", 10000, NULL, 5, &Ctrl_taskhandle, 1);
-  xTaskCreatePinnedToCore(task_socket, "Socket", 10000, NULL, 2, &Socket_taskhandle, 1);
-  //xTaskCreatePinnedToCore(task_bt_serial, "BT", 10000, NULL, 3, &BT_taskhandle, 1);
+  //xTaskCreatePinnedToCore(task_socket, "Socket", 10000, NULL, 2, &Socket_taskhandle, 1);
+  xTaskCreatePinnedToCore(task_bt_serial, "BT", 10000, NULL, 3, &BT_taskhandle, 1);
 }
 
 
@@ -34,7 +34,6 @@ void loop() {
   // put your main code here, to run repeatedly:
   delay(1000);
 
-  Serial.print("Beep");
 }
 
 // put function definitions here:
