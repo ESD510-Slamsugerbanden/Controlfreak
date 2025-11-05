@@ -44,7 +44,7 @@ void cmd_SE(char* arg, size_t len){
 
 void cmd_AZ(char* arg, size_t len){
     if(len == 0){
-        float angle = (get_azi()); // round to nearest degree
+        float angle = (get_azi_deg()); // round to nearest degree
         Serial.printf("AZ%.1f", angle);     
         Serial.flush();
         return;
@@ -52,12 +52,12 @@ void cmd_AZ(char* arg, size_t len){
     //Destroy our buffer
     arg[len] = 0;
     float angle = atof(arg);    
-    set_azi(angle);
+    set_azi_deg(angle);
 }
 
 void cmd_EL(char* arg, size_t len){
     if(len == 0){
-        float angle = (get_ele());
+        float angle = (get_ele_deg());
         Serial.printf("EL%.1f", angle);       
         Serial.flush();
         return;
@@ -67,7 +67,7 @@ void cmd_EL(char* arg, size_t len){
     arg[len] = 0;
     float angle = atof(arg);
 
-    set_ele(angle);
+    set_ele_deg(angle);
 
     
 }
@@ -126,9 +126,9 @@ void task_bt_serial(void *parameter){
 
 
 
-    Serial.printf("[Easycomm Serial]: Number of implented commands: %d \n", ARRAY_SIZE(cmd_table));
-    Serial.println("[Easycomm Serial]: Ready");
-
+    //Serial.printf("[Easycomm Serial]: Number of implented commands: %d \n", ARRAY_SIZE(cmd_table));
+    //Serial.println("[Easycomm Serial]: Ready");
+    //Serial.print("starting fucker");
     while(true){
         if(!Serial.available()){
             delay(1);   
@@ -153,6 +153,7 @@ void task_bt_serial(void *parameter){
             continue;
         }
         //If we are here we've gotten a command.
+        //Serial.print("gotcomed");
 
         char cmd[]=  {buffer[0], buffer[1], 0};
 
@@ -179,6 +180,5 @@ void task_bt_serial(void *parameter){
 
 
         buffer_index =0;
-        
     }
 }

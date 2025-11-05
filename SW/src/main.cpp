@@ -26,7 +26,7 @@ void setup() {
   int result = myFunction(2, 3);
   xTaskCreatePinnedToCore(task_motor_ctrl, "ctrl", 10000, NULL, 5, &Ctrl_taskhandle, 1);
   //xTaskCreatePinnedToCore(task_socket, "Socket", 10000, NULL, 2, &Socket_taskhandle, 1);
-  xTaskCreatePinnedToCore(task_bt_serial, "BT", 10000, NULL, 3, &BT_taskhandle, 1);
+  xTaskCreatePinnedToCore(task_bt_serial, "BT", 10000, NULL, 4, &BT_taskhandle, 1);
 }
 
 
