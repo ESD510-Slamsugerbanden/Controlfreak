@@ -1,8 +1,11 @@
 #include <Arduino.h>
 #include <HAL.h>
+#include <atomic>
 
 #define AZI_counts_pr_rev (6330*2)
-#define ELE_counts_pr_rev (280*4)
+#define ELE_counts_pr_rev (208*8)
+#define MAX_ELE_DEG 60
+
 
 void task_motor_ctrl(void *parameter);
 void task_socket(void* parameters);
@@ -45,3 +48,7 @@ int32_t get_ele();
 
 
 float get_ele_deg();
+
+int32_t azi_raw();
+
+int32_t ele_raw();

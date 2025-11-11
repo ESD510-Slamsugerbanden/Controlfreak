@@ -42,7 +42,7 @@ void cmd_SE(char* arg, size_t len){
 }
 
 
-void cmd_AZ(char* arg, size_t len){
+void cmd_AZ(char* arg, size_t len){ //Siger hvad AZI er sat til
     if(len == 0){
         float angle = (get_azi_deg()); // round to nearest degree
         Serial.printf("AZ%.1f", angle);     
@@ -55,10 +55,10 @@ void cmd_AZ(char* arg, size_t len){
     set_azi_deg(angle);
 }
 
-void cmd_EL(char* arg, size_t len){
+void cmd_EL(char* arg, size_t len){//Siger hvad ELE er sat til
     if(len == 0){
         float angle = (get_ele_deg());
-        Serial.printf("EL%.1f", angle);       
+        Serial.printf("EL%.1f LOCAL%d", angle,ele_raw());       
         Serial.flush();
         return;
     }
@@ -80,41 +80,41 @@ void cmd_ST(char* arg, size_t len){
 }
 
 // Mangler noget forbedring!!!
-void cmd_AZI_zero(char* arg, size_t len) {
+void cmd_AZI_zero(char* arg, size_t len) { //Sætter AZI til 0 ved home position
     if (len == 0) {
         int i = get_azi_deg();
+        uint32_t start_time = millis();
+        float steps = 30.0/1000.0; //30 degrees per second
         while (true) {
             if (digitalRead(AZI_home_PIN) == HIGH) {
                 Serial.println("Vi er home");
+                delay(50);
                 set_azi_home();
+                set_azi_deg(0);
                 Serial.flush();
                 break;
             }
-            set_azi_deg(i);
-           // if (abs(i - get_azi_deg()) < 2) {
-                i++;
-            delay(80);
-
-                //}
-            
+            set_azi_deg(float(millis()-start_time)*steps+i);
         }
     }
 }
 
-void cmd_ELE_zero(char* arg, size_t len) {
+void cmd_ELE_zero(char* arg, size_t len) { //Sætter ELE til 0 ved home position
     if (len == 0) {
-
-    int i = get_ele_deg();
+        int i = get_ele_deg();
+        uint32_t start_time = millis();
+        float steps = 20.0/1000.0; //10 degrees per second
         while(true) {
             if (digitalRead(ELE_home_PIN) == LOW) {
-            Serial.print("Elevation Home!");
-            set_ele_home();
-            Serial.flush();
-            break;
+                Serial.print("Elevation Home!");
+                delay(50);
+                set_ele_home();
+                set_ele_deg(0);
+                Serial.flush();
+                break;
             }
-            set_ele_deg(i);
-            i--;
-            delay(100);
+            set_ele_deg(float(millis()-start_time)*-steps+i);
+            
         }
      }
         

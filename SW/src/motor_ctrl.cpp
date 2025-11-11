@@ -9,6 +9,13 @@
 std::atomic<int32_t> ELE_counts(0);
 std::atomic<int32_t> AZI_counts(0);
 
+int32_t azi_raw() {
+    return AZI_counts;
+}
+int32_t ele_raw() {
+    return ELE_counts;
+}
+
 
 // When A pin is asserted this will run
 void IRAM_ATTR elevation_ISR() {
@@ -40,12 +47,10 @@ QueueHandle_t ele_pos = NULL;
 
 void set_azi_home(){
     AZI_counts = 0;
-    xQueueSend(azi_pos, 0, 0);
 }
 
 void set_ele_home(){
     ELE_counts = 0;
-    xQueueSend(ele_pos, 0, 0);
 }
 
 void set_azi_deg(float pos){
@@ -57,6 +62,7 @@ void set_azi_deg(float pos){
 void set_ele_deg(float pos){
     int temp = pos/360.0*ELE_counts_pr_rev;
 
+    
     xQueueSend(ele_pos, &temp, 0);
 }
 
