@@ -168,9 +168,9 @@ void task_bt_serial(void *parameter){
 
 
 
-    Serial.printf("[Easycomm Serial]: Number of implented commands: %d \n", ARRAY_SIZE(cmd_table));
-    Serial.println("[Easycomm Serial]: Ready");
-
+    //Serial.printf("[Easycomm Serial]: Number of implented commands: %d \n", ARRAY_SIZE(cmd_table));
+    //Serial.println("[Easycomm Serial]: Ready");
+    //Serial.print("starting fucker");
     while(true){
         if(!Serial.available()){
             delay(1);   
@@ -195,6 +195,7 @@ void task_bt_serial(void *parameter){
             continue;
         }
         //If we are here we've gotten a command.
+        //Serial.print("gotcomed");
 
         char cmd[]=  {buffer[0], buffer[1], 0};
 
@@ -221,6 +222,5 @@ void task_bt_serial(void *parameter){
 
 
         buffer_index =0;
-        
     }
 }
