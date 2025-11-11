@@ -9,6 +9,11 @@ void task_socket(void* parameters);
 
 void task_bt_serial(void *parameter);
 
+void set_azi_home();
+void set_ele_home();
+
+
+
 /// @brief Sets the target for the controller
 /// @param pos Position given in raw counts
 void set_azi(int32_t pos); //Sets position for azimuth

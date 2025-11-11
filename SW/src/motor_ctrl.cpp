@@ -38,6 +38,16 @@ QueueHandle_t azi_pos = NULL;
 QueueHandle_t ele_pos = NULL;
 
 
+void set_azi_home(){
+    AZI_counts = 0;
+    xQueueSend(azi_pos, 0, 0);
+}
+
+void set_ele_home(){
+    ELE_counts = 0;
+    xQueueSend(ele_pos, 0, 0);
+}
+
 void set_azi_deg(float pos){
 
     int temp = pos/360.0*AZI_counts_pr_rev;
@@ -95,9 +105,8 @@ void task_motor_ctrl(void *paramters){
     attachInterrupt(AZI_A_PIN, azimuth_ISR, RISING);
 
     int T_s = 10; //Sampling period for our controller set to 100Hz
-    TickType_t lastWake = xTaskGetTickCount();
 
-    PID_ctrl AZI_ctrl(-200, 200, T_s, 0.6, 1, 0.1);
+    PID_ctrl AZI_ctrl(-200, 200, T_s, 2, 0.5, 0.1);
     PID_ctrl ELE_ctrl(-255, 255, T_s, 10, 3, 0.6);
 
     pinMode(ELE_CW_PIN, OUTPUT);
@@ -109,6 +118,11 @@ void task_motor_ctrl(void *paramters){
 
     int i = 0;
     bool mode = false;
+    //delay(10000);
+
+    TickType_t lastWake = xTaskGetTickCount();
+
+
     while(true){
         int azi_pos_buffer = 0;
         int ele_pos_buffer = 0;
@@ -124,10 +138,20 @@ void task_motor_ctrl(void *paramters){
         int ELE_counts_local = ELE_counts;
         int PWM_azi =AZI_ctrl.compute(AZI_counts_local);
         int PWM_ele = ELE_ctrl.compute(ELE_counts_local);
-        AZI_motor.set_speed(PWM_azi);
         ELE_motor.set_speed(PWM_ele);
+        AZI_motor.set_speed(PWM_azi);
 
-        
+        /*
+        unsigned long TimeStampsMS = xTaskGetTickCount() * portTICK_PERIOD_MS;
+        if (AZI_counts_local < AZI_counts_pr_rev){
+            Serial.printf("%lu , %d\n" , TimeStampsMS, AZI_counts_local);
+            AZI_motor.set_speed(200);
+        } else {
+            AZI_motor.set_speed(0);
+            Serial.printf("%lu , %d\n" , TimeStampsMS, AZI_counts_local);
+
+        }
+        */
         //Serial.printf("AZI: %d", AZI_counts_local);
 
 

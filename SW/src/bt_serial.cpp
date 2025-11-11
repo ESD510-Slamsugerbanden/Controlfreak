@@ -44,7 +44,7 @@ void cmd_SE(char* arg, size_t len){
 
 void cmd_AZ(char* arg, size_t len){
     if(len == 0){
-        float angle = (get_azi()); // round to nearest degree
+        float angle = (get_azi_deg()); // round to nearest degree
         Serial.printf("AZ%.1f", angle);     
         Serial.flush();
         return;
@@ -52,12 +52,12 @@ void cmd_AZ(char* arg, size_t len){
     //Destroy our buffer
     arg[len] = 0;
     float angle = atof(arg);    
-    set_azi(angle);
+    set_azi_deg(angle);
 }
 
 void cmd_EL(char* arg, size_t len){
     if(len == 0){
-        float angle = (get_ele());
+        float angle = (get_ele_deg());
         Serial.printf("EL%.1f", angle);       
         Serial.flush();
         return;
@@ -67,7 +67,7 @@ void cmd_EL(char* arg, size_t len){
     arg[len] = 0;
     float angle = atof(arg);
 
-    set_ele(angle);
+    set_ele_deg(angle);
 
     
 }
@@ -79,6 +79,46 @@ void cmd_ST(char* arg, size_t len){
 
 }
 
+// Mangler noget forbedring!!!
+void cmd_AZI_zero(char* arg, size_t len) {
+    if (len == 0) {
+        int i = get_azi_deg();
+        while (true) {
+            if (digitalRead(AZI_home_PIN) == HIGH) {
+                Serial.println("Vi er home");
+                set_azi_home();
+                Serial.flush();
+                break;
+            }
+            set_azi_deg(i);
+           // if (abs(i - get_azi_deg()) < 2) {
+                i++;
+            delay(80);
+
+                //}
+            
+        }
+    }
+}
+
+void cmd_ELE_zero(char* arg, size_t len) {
+    if (len == 0) {
+
+    int i = get_ele_deg();
+        while(true) {
+            if (digitalRead(ELE_home_PIN) == LOW) {
+            Serial.print("Elevation Home!");
+            set_ele_home();
+            Serial.flush();
+            break;
+            }
+            set_ele_deg(i);
+            i--;
+            delay(100);
+        }
+     }
+        
+}
 
 
 
@@ -98,7 +138,9 @@ ezcom_cmd_t cmd_table[]{
     {"AZ", cmd_AZ},
     {"EL", cmd_EL},
     {"ST", cmd_ST},
-    {"SE", cmd_SE}
+    {"SE", cmd_SE},
+    {"ZA", cmd_AZI_zero},
+    {"ZE", cmd_ELE_zero}
 };
 
 

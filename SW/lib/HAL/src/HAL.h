@@ -24,5 +24,5 @@
 
 
 
-#define ELE_home_PIN 17
+#define ELE_home_PIN 16
 #define AZI_home_PIN 4
