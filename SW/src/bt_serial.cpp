@@ -87,7 +87,7 @@ void cmd_AZI_zero(char* arg, size_t len) { //Sætter AZI til 0 ved home position
         float steps = 30.0/1000.0; //30 degrees per second
         while (true) {
             if (digitalRead(AZI_home_PIN) == HIGH) {
-                Serial.println("Vi er home");
+                Serial.println("OK\n");
                 delay(50);
                 set_azi_home();
                 set_azi_deg(0);
@@ -106,7 +106,7 @@ void cmd_ELE_zero(char* arg, size_t len) { //Sætter ELE til 0 ved home position
         float steps = 20.0/1000.0; //10 degrees per second
         while(true) {
             if (digitalRead(ELE_home_PIN) == LOW) {
-                Serial.print("Elevation Home!");
+                Serial.print("OK\n");
                 delay(50);
                 set_ele_home();
                 set_ele_deg(0);
