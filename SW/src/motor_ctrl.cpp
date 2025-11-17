@@ -16,7 +16,7 @@ int32_t ele_raw() {
     return ELE_counts;
 }
 
-
+/*
 // When A pin is asserted this will run
 void IRAM_ATTR elevation_ISR() {
     int state = (GPIO.in1.data >> (ELE_B_PIN - 32)) & 0x1; //Flækker portreisgre direkte
@@ -26,6 +26,7 @@ void IRAM_ATTR elevation_ISR() {
     else
         ELE_counts--;
 }
+*/
 
 
 
@@ -107,7 +108,7 @@ void task_motor_ctrl(void *paramters){
     pinMode(AZI_A_PIN, INPUT_PULLDOWN);
     pinMode(ELE_A_PIN, INPUT_PULLDOWN);
     pinMode(status_LED1_PIN, OUTPUT);
-    attachInterrupt(ELE_A_PIN, elevation_ISR, RISING);
+    //attachInterrupt(ELE_A_PIN, elevation_ISR, RISING);
     attachInterrupt(AZI_A_PIN, azimuth_ISR, RISING);
 
     int T_s = 10; //Sampling period for our controller set to 100Hz
@@ -141,8 +142,8 @@ void task_motor_ctrl(void *paramters){
 
         //Serial.print("RALLAHRALLAH");
         int AZI_counts_local = AZI_counts;
-        int ELE_counts_local = ELE_counts;
-        int PWM_azi =AZI_ctrl.compute(AZI_counts_local);
+        int ELE_counts_local = analogRead(ELE_A_PIN); //ELE_counts;
+        int PWM_azi = AZI_ctrl.compute(AZI_counts_local);
         int PWM_ele = ELE_ctrl.compute(ELE_counts_local);
         ELE_motor.set_speed(PWM_ele);
         AZI_motor.set_speed(PWM_azi);
