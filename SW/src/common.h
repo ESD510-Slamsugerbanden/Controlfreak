@@ -3,7 +3,7 @@
 #include <atomic>
 
 #define AZI_counts_pr_rev (6330*2)
-#define ELE_counts_pr_rev (208*8)
+#define ELE_counts_pr_rev (4096)
 #define MAX_ELE_DEG 60
 
 
