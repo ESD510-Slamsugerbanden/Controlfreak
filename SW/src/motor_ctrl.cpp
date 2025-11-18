@@ -114,8 +114,8 @@ void task_motor_ctrl(void *paramters){
     int T_s = 10; //Sampling period for our controller set to 100Hz
     
     PID_ctrl AZI_ctrl(-200, 200, T_s, 2, 0.5, 0.1);
-    PID_ctrl ELE_ctrl(-55, 55, T_s, 0.1, 0.00, 0.00);
-    ELE_ctrl.set_windup_limit(0.2);
+    PID_ctrl ELE_ctrl(-55, 55, T_s, 0.12, 0.03, 0.002);
+    //ELE_ctrl.set_windup_limit(0.2);
     pinMode(ELE_CW_PIN, OUTPUT);
     digitalWrite(ELE_CW_PIN,LOW);
     pinMode(ELE_CCW_PIN, OUTPUT);
