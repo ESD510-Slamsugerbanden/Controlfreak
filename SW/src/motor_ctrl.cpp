@@ -158,9 +158,10 @@ void task_motor_ctrl(void *paramters){
         //PWM_ele += abs(PWM_ele)/PWM_ele * 140;
         ELE_motor.set_speed(PWM_ele);
         AZI_motor.set_speed(PWM_azi);
-        if(i%100==0){
-            Serial.println(PWM_ele);
-        }
+        
+        //if(i%100==0){
+        //    Serial.println(PWM_ele);
+        //}
         /*
         unsigned long TimeStampsMS = xTaskGetTickCount() * portTICK_PERIOD_MS;
         if (AZI_counts_local < AZI_counts_pr_rev){
