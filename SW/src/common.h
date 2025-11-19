@@ -4,7 +4,9 @@
 
 #define AZI_counts_pr_rev (6330*2)
 #define ELE_counts_pr_rev (4096)
-#define MAX_ELE_DEG 60
+#define POT_OFFSET (950)
+#define ELE_MIN (0)
+#define ELE_MAX (75)
 
 
 void task_motor_ctrl(void *parameter);

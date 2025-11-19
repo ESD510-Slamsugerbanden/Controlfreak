@@ -61,6 +61,15 @@ void set_azi_deg(float pos){
 }
 
 void set_ele_deg(float pos){
+    if (pos >= ELE_MAX)
+    {
+        pos = ELE_MAX;
+    }
+    else if (pos <= ELE_MIN)
+    {
+        pos = ELE_MIN;
+    }
+    
     int temp = pos/360.0*ELE_counts_pr_rev;
 
     
@@ -106,7 +115,7 @@ void task_motor_ctrl(void *paramters){
     pinMode(AZI_B_PIN, INPUT);
     pinMode(ELE_B_PIN, INPUT);
     pinMode(AZI_A_PIN, INPUT_PULLDOWN);
-    pinMode(ELE_A_PIN, INPUT_PULLDOWN);
+    pinMode(ELE_A_PIN, ANALOG);
     pinMode(status_LED1_PIN, OUTPUT);
     //attachInterrupt(ELE_A_PIN, elevation_ISR, RISING);
     attachInterrupt(AZI_A_PIN, azimuth_ISR, RISING);
@@ -114,8 +123,8 @@ void task_motor_ctrl(void *paramters){
     int T_s = 10; //Sampling period for our controller set to 100Hz
     
     PID_ctrl AZI_ctrl(-200, 200, T_s, 2, 0.5, 0.1);
-    PID_ctrl ELE_ctrl(-55, 55, T_s, 0.12, 0.03, 0.002);
-    //ELE_ctrl.set_windup_limit(0.2);
+    PID_ctrl ELE_ctrl(-255, 255, T_s, 0.5, 0.2, 0.02);
+    ELE_ctrl.set_windup_limit(0.5);
     pinMode(ELE_CW_PIN, OUTPUT);
     digitalWrite(ELE_CW_PIN,LOW);
     pinMode(ELE_CCW_PIN, OUTPUT);
@@ -142,11 +151,11 @@ void task_motor_ctrl(void *paramters){
 
         //Serial.print("RALLAHRALLAH");
         int AZI_counts_local = AZI_counts;
-        int ELE_counts_local = analogRead(ELE_A_PIN); //ELE_counts;
+        int ELE_counts_local = analogRead(ELE_A_PIN)-POT_OFFSET; //ELE_counts;
         ELE_counts = ELE_counts_local;
         int PWM_azi = AZI_ctrl.compute(AZI_counts_local);
         int PWM_ele = ELE_ctrl.compute(ELE_counts_local);
-        PWM_ele += abs(PWM_ele)/PWM_ele * 140;
+        //PWM_ele += abs(PWM_ele)/PWM_ele * 140;
         ELE_motor.set_speed(PWM_ele);
         AZI_motor.set_speed(PWM_azi);
         if(i%100==0){
