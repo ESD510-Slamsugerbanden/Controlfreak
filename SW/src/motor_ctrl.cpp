@@ -122,8 +122,8 @@ void task_motor_ctrl(void *paramters){
 
     int T_s = 10; //Sampling period for our controller set to 100Hz
     
-    PID_ctrl AZI_ctrl(-200, 200, T_s, 2, 0.5, 0.1);
-    PID_ctrl ELE_ctrl(-255, 255, T_s, 0.5, 0.2, 0.02);
+    PID_ctrl AZI_ctrl(-200, 200, T_s, 2, 0.5, 0.1); //2, 0.5, 0.1 Virker
+    PID_ctrl ELE_ctrl(-255, 255, T_s, 0.5, 0.2, 0.02); //0.5, 0.2, 0.02 Virker
     ELE_ctrl.set_windup_limit(0.5);
     pinMode(ELE_CW_PIN, OUTPUT);
     digitalWrite(ELE_CW_PIN,LOW);
