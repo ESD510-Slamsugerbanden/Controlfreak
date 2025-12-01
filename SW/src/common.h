@@ -2,7 +2,7 @@
 #include <HAL.h>
 #include <atomic>
 
-#define AZI_counts_pr_rev (6330*2)
+#define AZI_counts_pr_rev (12800)
 #define ELE_counts_pr_rev (4096)
 #define POT_OFFSET (950)
 #define ELE_MIN (0)
