@@ -9,33 +9,41 @@
 std::atomic<int32_t> ELE_counts(0);
 std::atomic<int32_t> AZI_counts(0);
 
-int32_t azi_raw() {
-    return AZI_counts;
-}
-int32_t ele_raw() {
-    return ELE_counts;
-}
 
-/*
+
+
 // When A pin is asserted this will run
 void IRAM_ATTR elevation_ISR() {
+    static int32_t local_counter = 0;
     int state = (GPIO.in1.data >> (ELE_B_PIN - 32)) & 0x1; //Flækker portreisgre direkte
+    
 
+    
     if (state)
-        ELE_counts++;
+        local_counter++;
     else
-        ELE_counts--;
+        local_counter--;
+
+    if(ELE_counts.is_lock_free()){
+        ELE_counts.fetch_add(local_counter);
+        local_counter = 0;
+    }
 }
-*/
 
 
 
 void IRAM_ATTR azimuth_ISR() {
+    static int32_t local_counter = 0;
     int state = (GPIO.in1.data >> (AZI_B_PIN - 32)) & 0x1; //Flækker portreisgre direkte
     if (state)
-        AZI_counts--;
+        local_counter--;
     else
-        AZI_counts++;
+        local_counter++;
+    
+    if(AZI_counts.is_lock_free()){
+        AZI_counts.fetch_add(local_counter);
+        local_counter = 0;
+    }
 }
 
 
